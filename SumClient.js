@@ -1,25 +1,15 @@
-var buffer = require('buffer');
-var udp = require('dgram');
-// creating a client socket
-var client = udp.createSocket('udp4');
-//buffer msg
-var data = Buffer.from('123');
-client.on('message', function(num, info) {
-    console.log('Data received from server : ' + num.toString());
-    //console.log('Received %d bytes from %s:%d\n', str.length, info.address, info.port);
-});
-//sending msg
-client.send(data, 2222, 'localhost', function(error) {
-    if (error) {
-        client.close();
-    } else {
-        console.log('Data sent !!!');
-    }
+  
+var net = require('net');
+var client = net.connect(8000);
+console.log('Connected to Server !!!')
+
+client.write('123');
+
+client.on('data', function(data) {
+    console.log(data.toString());
+    client.end();
 });
 
-client.on('close', function() {
-    console.log('Client Socket is closed !');
+client.on('end', function() {
+    console.log('I have disconnected !!!')
 });
-setTimeout(function() {
-    client.close();
-}, 8000);
